@@ -20,34 +20,44 @@ namespace QuanLyBanDienThoai
             dgvDienThoai.DataSource = kn.LayDuLieu(sql);
         }
 
-        // Chức năng Xóa Điện thoại đang chọn
-        private void btnDelete_Click(object sender, EventArgs e)
+        // Bước 1: Khi nhấn vào bảng, hiển thị dữ liệu lên các ô TextBox
+        private void dgvDienThoai_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvDienThoai.CurrentRow != null)
+            if (e.RowIndex >= 0)
             {
-                // Lấy mã điện thoại từ cột đầu tiên của dòng đang chọn
-                string ma = dgvDienThoai.CurrentRow.Cells[0].Value.ToString();
-
-                DialogResult dr = MessageBox.Show("Bạn có chắc chắn muốn xóa máy " + ma + " không?", "Xác nhận", MessageBoxButtons.YesNo);
-                if (dr == DialogResult.Yes)
-                {
-                    string sql = "DELETE FROM DienThoai WHERE MaDT = '" + ma + "'";
-                    if (kn.ThucThi(sql))
-                    {
-                        MessageBox.Show("Đã xóa thành công!");
-                        LoadData(); // Cập nhật lại bảng
-                    }
-                    else { MessageBox.Show("Lỗi khi xóa dữ liệu!"); }
-                }
+                DataGridViewRow row = dgvDienThoai.Rows[e.RowIndex];
+                txtMaDT.Text = row.Cells[0].Value.ToString();
+                txtTenDT.Text = row.Cells[1].Value.ToString();
+                txtGiaBan.Text = row.Cells[2].Value.ToString();
+                txtSoLuong.Text = row.Cells[3].Value.ToString();
+                txtHangSX.Text = row.Cells[4].Value.ToString();
+                
+                // Khóa ô Mã (không cho sửa Mã vì là Khóa chính)
+                txtMaDT.ReadOnly = true;
             }
-            else { MessageBox.Show("Vui lòng chọn một dòng để xóa!"); }
         }
 
-        private void btnAdd_Click(object sender, EventArgs e)
+        // Bước 2: Chức năng Sửa thông tin
+        private void btnEdit_Click(object sender, EventArgs e)
         {
-            string sql = string.Format("INSERT INTO DienThoai VALUES ('{0}', N'{1}', {2}, {3}, N'{4}')", 
-                                        txtMaDT.Text, txtTenDT.Text, txtGiaBan.Text, txtSoLuong.Text, txtHangSX.Text);
-            if (kn.ThucThi(sql)) { MessageBox.Show("Thêm thành công!"); LoadData(); }
+            string sql = string.Format("UPDATE DienThoai SET TenDT = N'{0}', GiaBan = {1}, SoLuong = {2}, HangSX = N'{3}' WHERE MaDT = '{4}'",
+                                        txtTenDT.Text, txtGiaBan.Text, txtSoLuong.Text, txtHangSX.Text, txtMaDT.Text);
+
+            if (kn.ThucThi(sql))
+            {
+                MessageBox.Show("Cập nhật thông tin thành công!");
+                LoadData();
+                txtMaDT.ReadOnly = false; // Mở lại ô Mã cho lần thêm tiếp theo
+            }
+            else { MessageBox.Show("Lỗi khi cập nhật dữ liệu!"); }
+        }
+
+        // Các hàm cũ (Xóa, Thêm...) giữ nguyên
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            string ma = dgvDienThoai.CurrentRow.Cells[0].Value.ToString();
+            string sql = "DELETE FROM DienThoai WHERE MaDT = '" + ma + "'";
+            if (kn.ThucThi(sql)) { MessageBox.Show("Đã xóa!"); LoadData(); }
         }
     }
 }
