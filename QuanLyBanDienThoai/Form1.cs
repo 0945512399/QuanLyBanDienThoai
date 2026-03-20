@@ -11,15 +11,24 @@ namespace QuanLyBanDienThoai
         public Form1()
         {
             InitializeComponent();
-            LoadData(); // Tự động gọi khi mở Form
+            LoadData();
         }
 
-        // Hàm lấy danh sách điện thoại từ SQL lên bảng (DataGridView)
         public void LoadData()
         {
             string sql = "SELECT MaDT AS [Mã], TenDT AS [Tên Máy], GiaBan AS [Giá], SoLuong AS [Kho], HangSX AS [Hãng] FROM DienThoai";
-            DataTable dt = kn.LayDuLieu(sql);
-            dgvDienThoai.DataSource = dt; // dgvDienThoai là tên của DataGridView trên giao diện
+            dgvDienThoai.DataSource = kn.LayDuLieu(sql);
+        }
+
+        // Sự kiện Tìm kiếm nhanh khi gõ chữ vào ô txtSearch
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            string keyword = txtSearch.Text;
+            // Tìm kiếm theo Tên máy hoặc Hãng sản xuất
+            string sql = "SELECT MaDT AS [Mã], TenDT AS [Tên Máy], GiaBan AS [Giá], SoLuong AS [Kho], HangSX AS [Hãng] " +
+                         "FROM DienThoai WHERE TenDT LIKE N'%" + keyword + "%' OR HangSX LIKE N'%" + keyword + "%'";
+            
+            dgvDienThoai.DataSource = kn.LayDuLieu(sql);
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -32,7 +41,7 @@ namespace QuanLyBanDienThoai
             if (dt.Rows.Count > 0)
             {
                 MessageBox.Show("Đăng nhập thành công!");
-                LoadData(); // Sau khi đăng nhập thì hiện danh sách
+                LoadData();
             }
             else { MessageBox.Show("Sai tài khoản!"); }
         }
