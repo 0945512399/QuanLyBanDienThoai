@@ -1,0 +1,27 @@
+CREATE DATABASE QuanLyBanDienThoai;
+GO
+USE QuanLyBanDienThoai;
+GO
+
+CREATE TABLE DienThoai (
+    MaDT NVARCHAR(20) PRIMARY KEY,
+    TenDT NVARCHAR(100),
+    GiaBan DECIMAL(18, 2),
+    SoLuong INT,
+    HangSX NVARCHAR(50)
+);
+
+CREATE TABLE KhachHang (
+    MaKH NVARCHAR(20) PRIMARY KEY,
+    TenKH NVARCHAR(100),
+    SoDienThoai NVARCHAR(15),
+    DiaChi NVARCHAR(200)
+);
+
+CREATE TABLE HoaDon (
+    MaHD NVARCHAR(20) PRIMARY KEY,
+    NgayBan DATETIME,
+    MaKH NVARCHAR(20),
+    TongTien DECIMAL(18, 2),
+    FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH)
+);
