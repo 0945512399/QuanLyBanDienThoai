@@ -11,26 +11,30 @@ namespace QuanLyBanDienThoai
         public Form1()
         {
             InitializeComponent();
+            LoadData(); // Tự động gọi khi mở Form
         }
 
-        // Sự kiện khi nhấn nút Đăng nhập
+        // Hàm lấy danh sách điện thoại từ SQL lên bảng (DataGridView)
+        public void LoadData()
+        {
+            string sql = "SELECT MaDT AS [Mã], TenDT AS [Tên Máy], GiaBan AS [Giá], SoLuong AS [Kho], HangSX AS [Hãng] FROM DienThoai";
+            DataTable dt = kn.LayDuLieu(sql);
+            dgvDienThoai.DataSource = dt; // dgvDienThoai là tên của DataGridView trên giao diện
+        }
+
         private void btnLogin_Click(object sender, EventArgs e)
         {
             string user = txtUsername.Text;
             string pass = txtPassword.Text;
-
             string sql = "SELECT * FROM NguoiDung WHERE TenDangNhap = '" + user + "' AND MatKhau = '" + pass + "'";
             DataTable dt = kn.LayDuLieu(sql);
 
             if (dt.Rows.Count > 0)
             {
-                MessageBox.Show("Đăng nhập thành công! Chào mừng " + dt.Rows[0]["HoTen"].ToString());
-                // Chuyển sang Form chính của đồ án tại đây
+                MessageBox.Show("Đăng nhập thành công!");
+                LoadData(); // Sau khi đăng nhập thì hiện danh sách
             }
-            else
-            {
-                MessageBox.Show("Sai tài khoản hoặc mật khẩu!");
-            }
+            else { MessageBox.Show("Sai tài khoản!"); }
         }
     }
 }
