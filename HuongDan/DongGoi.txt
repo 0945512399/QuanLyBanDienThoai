@@ -1,0 +1,6 @@
+HUONG DAN DONG GOI DO AN (.EXE)
+1. Mo Visual Studio.
+2. Chuot phai vao Project -> Publish.
+3. Chon kieu Folder.
+4. Chon 'Produce single file' trong Settings de gom tat ca vao 1 file .exe duy nhat.
+5. Copy file trong thu muc bin/Release/net.../publish de gui cho giang vien.
